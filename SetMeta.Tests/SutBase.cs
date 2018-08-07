@@ -5,7 +5,6 @@ using NUnit.Framework;
 
 namespace SetMeta.Tests
 {
-    [TestFixture]
     public class SutBase<TSut, TContract>
         : AutoFixtureBase
         where TSut : class, TContract
