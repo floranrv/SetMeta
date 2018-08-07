@@ -1,10 +1,13 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Kernel;
+using NUnit.Framework;
 
 namespace SetMeta.Tests
 {
-    public class SutBase<TSut, TContract> : AutoFixtureBase
+    [TestFixture]
+    public class SutBase<TSut, TContract>
+        : AutoFixtureBase
         where TSut : class, TContract
         where TContract : class
     {

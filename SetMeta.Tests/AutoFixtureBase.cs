@@ -6,6 +6,7 @@ using NUnit.Framework;
 
 namespace SetMeta.Tests
 {
+    [TestFixture]
     public abstract class AutoFixtureBase
     {
         public IFixture AutoFixture { get; private set; }

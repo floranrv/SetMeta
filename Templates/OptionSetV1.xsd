@@ -8,7 +8,7 @@
       <xs:sequence>
         <xs:element name="option" minOccurs="1" maxOccurs="unbounded" type="optionType"/>
       </xs:sequence>
-      <xs:attribute name="version" type="xs:int" use="required" fixed="1"/>
+      <xs:attribute name="version" type="xs:string" use="required" fixed="1"/>
     </xs:complexType>
     <xs:unique name="optionNameMustBeUnique">
       <xs:selector xpath="option" />
