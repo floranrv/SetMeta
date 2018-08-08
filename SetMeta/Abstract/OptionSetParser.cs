@@ -15,8 +15,10 @@ namespace SetMeta.Abstract
 
         public abstract string Version { get; }
 
-        public OptionSetParser Create(string version)
+        public static OptionSetParser Create(string version)
         {
+            if (version == null) throw new ArgumentNullException(nameof(version));
+
             lock (OptionSetParsers)
             {
                 FillParsers();
@@ -30,7 +32,7 @@ namespace SetMeta.Abstract
             throw new InvalidOperationException($"Can't create '{nameof(OptionSetParser)}' of given version '{version}'");
         }
 
-        public OptionSetParser Create(Stream stream)
+        public static OptionSetParser Create(Stream stream)
         {
             if (stream == null) throw new ArgumentNullException(nameof(stream));
 
@@ -40,7 +42,7 @@ namespace SetMeta.Abstract
             }
         }
 
-        public OptionSetParser Create(XmlTextReader reader)
+        public static OptionSetParser Create(XmlTextReader reader)
         {
             if (reader == null) throw new ArgumentNullException(nameof(reader));
 
