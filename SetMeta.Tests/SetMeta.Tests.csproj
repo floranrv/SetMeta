@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoFixtureBase.cs" />
+    <Compile Include="Impl\OptionValueConverterTestFixture.cs" />
     <Compile Include="Impl\OptionValueFactoryTestFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SutBase.cs" />
