@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Xml;
 using NUnit.Framework;
 using SetMeta.Abstract;
 
@@ -26,7 +27,9 @@ namespace SetMeta.Tests.Impl
             var ex = Assert.Throws<InvalidOperationException>(() =>
             {
                 OptionSetParser.Create("");
-            });            
+            });
+
+            Assert.That(ex.Message, Is.EqualTo($"Can't create '{nameof(OptionSetParser)}' of given version ''"));
         }
 
         [Test]
@@ -38,6 +41,17 @@ namespace SetMeta.Tests.Impl
             });
 
             Assert.That(ex.ParamName, Is.EqualTo("stream"));
+        }
+
+        [Test]
+        public void Create_WhenWePassReaderNull_ThrowException()
+        {
+            var ex = Assert.Throws<ArgumentNullException>(() =>
+            {
+                OptionSetParser.Create((XmlTextReader)null);
+            });
+
+            Assert.That(ex.ParamName, Is.EqualTo("reader"));
         }
     }
 }

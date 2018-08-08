@@ -87,11 +87,11 @@ namespace SetMeta.Tests.Impl
         [TestCase(null, "ru-RU")]
         [TestCase("", "en-US")]
         [TestCase(null, "en-US")]
-        public void GetStringValueCulture_WhenWePassNullOrEmptyString_NullOrEmptyStringShouldBeReturned(string value, string cultureName)
+        public void GetStringValueCulture_WhenWePassNullOrEmptyString_NullOrEmptyStringShouldBeReturned(string expected, string cultureName)
         {
-            var actual = Sut.GetStringValue(value, CreateCultureInfo(cultureName));
+            var actual = Sut.GetStringValue(expected, CreateCultureInfo(cultureName));
 
-            Assert.That(actual, Is.EqualTo(value));
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [TestCase("ru-RU")]
