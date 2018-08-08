@@ -22,39 +22,24 @@ namespace SetMeta.Tests.Impl
             });
         }
 
-        [Test]
-        public void GetValue_WhenWePassNull_NullShouldBeReturned()
+        [TestCase("")]
+        [TestCase(null)]
+        public void GetValue_WhenWePassNullOrEmptyString_NullOrEmptyStringShouldBeReturned(string value)
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var actual = Sut.GetValue(null);
+            var actual = Sut.GetValue(value);
 
-                Assert.IsNull(actual);
-            });
-        }
-
-        [Test]
-        public void GetValue_WhenWePassEmptyString_EmptyStringShouldBeReturned()
-        {
-            Assert.DoesNotThrow(() =>
-            {
-                var actual = Sut.GetValue("");
-
-                Assert.IsEmpty(actual);
-            });
+            Assert.That(actual, Is.EqualTo(value));
         }
 
         [Test]
         public void GetValue_WhenWePassString_SameStringShouldBeReturned()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                string temp = Fake<string>();
 
-                var actual = Sut.GetValue(temp);
+            string expected = Fake<string>();
 
-                Assert.That(actual, Is.EqualTo(temp));
-            });
+            var actual = Sut.GetValue(expected);
+
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -68,39 +53,23 @@ namespace SetMeta.Tests.Impl
             });
         }
 
-        [Test]
-        public void GetStringValue_WhenWePassNull_NullShouldBeReturned()
+        [TestCase("")]
+        [TestCase(null)]
+        public void GetStringValue_WhenWePassNullOrEmptyString_NullOrEmptyStringShouldBeReturned(string value)
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var actual = Sut.GetStringValue(null);
+            var actual = Sut.GetStringValue(value);
 
-                Assert.IsNull(actual);
-            });
-        }
-
-        [Test]
-        public void GetStringValue_WhenWePassEmptyString_EmptyStringShouldBeReturned()
-        {
-            Assert.DoesNotThrow(() =>
-            {
-                var actual = Sut.GetStringValue("");
-
-                Assert.IsEmpty(actual);
-            });
+            Assert.That(actual, Is.EqualTo(value));
         }
 
         [Test]
         public void GetStringValue_WhenWePassString_SameStringShouldBeReturned()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                string temp = Fake<string>();
+            string expected = Fake<string>();
 
-                var actual = Sut.GetStringValue(temp);
+            var actual = Sut.GetStringValue(expected);
 
-                Assert.That(actual, Is.EqualTo(temp));
-            });
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -114,74 +83,31 @@ namespace SetMeta.Tests.Impl
             Assert.That(ex.ParamName, Is.EqualTo("formatProvider"));
         }
 
-        [Test]
-        public void GetStringValueRuCulture_WhenWePassNull_NullShouldBeReturned()
+        [TestCase("", "ru-RU")]
+        [TestCase(null, "ru-RU")]
+        [TestCase("", "en-US")]
+        [TestCase(null, "en-US")]
+        public void GetStringValueCulture_WhenWePassNullOrEmptyString_NullOrEmptyStringShouldBeReturned(string value, string cultureName)
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var actual = Sut.GetStringValue(null, new CultureInfo("ru-RU"));
+            var actual = Sut.GetStringValue(value, CreateCultureInfo(cultureName));
 
-                Assert.IsNull(actual);
-            });
+            Assert.That(actual, Is.EqualTo(value));
         }
 
-        [Test]
-        public void GetStringValueRuCulture_WhenWePassEmptyString_EmptyStringShouldBeReturned()
+        [TestCase("ru-RU")]
+        [TestCase("en-US")]
+        public void GetStringValueCulture_WhenWePassString_SameStringShouldBeReturned(string cultureName)
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var actual = Sut.GetStringValue("", new CultureInfo("ru-RU"));
+            string expected = Fake<string>();
 
-                Assert.IsEmpty(actual);
-            });
+            var actual = Sut.GetStringValue(expected, CreateCultureInfo(cultureName));
+
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
-        [Test]
-        public void GetStringValueRuCulture_WhenWePassString_SameStringShouldBeReturned()
+        private CultureInfo CreateCultureInfo(string value)
         {
-            Assert.DoesNotThrow(() =>
-            {
-                string temp = Fake<string>();
-
-                var actual = Sut.GetStringValue(temp, new CultureInfo("ru-RU"));
-
-                Assert.That(actual, Is.EqualTo(temp));
-            });
-        }
-
-        [Test]
-        public void GetStringValueUsCulture_WhenWePassNull_NullShouldBeReturned()
-        {
-            Assert.DoesNotThrow(() =>
-            {
-                var actual = Sut.GetStringValue(null, new CultureInfo("en-US"));
-
-                Assert.IsNull(actual);
-            });
-        }
-
-        [Test]
-        public void GetStringValueUsCulture_WhenWePassEmptyString_EmptyStringShouldBeReturned()
-        {
-            Assert.DoesNotThrow(() =>
-            {
-                var actual = Sut.GetStringValue("", new CultureInfo("en-US"));
-
-                Assert.IsEmpty(actual);
-            });
-        }
-
-        [Test]
-        public void GetStringValueUsCulture_WhenWePassString_SameStringShouldBeReturned()
-        {
-            Assert.DoesNotThrow(() =>
-            {
-                string temp = Fake<string>();
-
-                var actual = Sut.GetStringValue(temp, new CultureInfo("en-US"));
-
-                Assert.That(actual, Is.EqualTo(temp));
-            });
+            return new CultureInfo(value);
         }
     }
 }
