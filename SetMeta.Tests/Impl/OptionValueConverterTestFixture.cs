@@ -75,12 +75,12 @@ namespace SetMeta.Tests.Impl
         [Test]
         public void GetStringValue_WhenFormatProviderIsNull_ThrowException()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() =>
+            void Delegate()
             {
                 Sut.GetStringValue(Fake<string>(), null);
-            });
+            }
 
-            Assert.That(ex.ParamName, Is.EqualTo("formatProvider"));
+            AssertEx.ThrowsArgumentNullException(Delegate, "formatProvider");
         }
 
         [TestCase("", "ru-RU")]

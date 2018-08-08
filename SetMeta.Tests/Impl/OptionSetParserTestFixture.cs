@@ -13,12 +13,12 @@ namespace SetMeta.Tests.Impl
         [Test]
         public void Create_WhenWePassStringNull_ThrowException()        
         {
-            var ex = Assert.Throws<ArgumentNullException>(() =>
+            void Delegate()
             {
-                OptionSetParser.Create((string) null);
-            });
+                OptionSetParser.Create((string)null);
+            }
 
-            Assert.That(ex.ParamName, Is.EqualTo("version"));
+            AssertEx.ThrowsArgumentNullException(Delegate, "version");
         }
 
         [Test]
@@ -29,29 +29,29 @@ namespace SetMeta.Tests.Impl
                 OptionSetParser.Create("");
             });
 
-            Assert.That(ex.Message, Is.EqualTo($"Can't create '{nameof(OptionSetParser)}' of given version ''"));
+            Assert.That(ex.Message, Is.EqualTo($"Can't create '{nameof(OptionSetParser)}' of given version ''."));
         }
 
         [Test]
         public void Create_WhenWePassStreamNull_ThrowException()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() =>
+            void Delegate()
             {
-                OptionSetParser.Create((Stream) null);
-            });
+                OptionSetParser.Create((Stream)null);
+            }
 
-            Assert.That(ex.ParamName, Is.EqualTo("stream"));
+            AssertEx.ThrowsArgumentNullException(Delegate, "stream");
         }
 
         [Test]
         public void Create_WhenWePassReaderNull_ThrowException()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() =>
+            void Delegate()
             {
                 OptionSetParser.Create((XmlTextReader)null);
-            });
+            }
 
-            Assert.That(ex.ParamName, Is.EqualTo("reader"));
+            AssertEx.ThrowsArgumentNullException(Delegate, "reader");
         }
     }
 }
