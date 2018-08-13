@@ -29,7 +29,7 @@ namespace SetMeta.Abstract
                 }
             }
             
-            throw new InvalidOperationException($"Can't create '{nameof(OptionSetParser)}' of given version '{version}'");
+            throw new InvalidOperationException($"Can't create '{nameof(OptionSetParser)}' of given version '{version}'.");
         }
 
         public static OptionSetParser Create(Stream stream)
