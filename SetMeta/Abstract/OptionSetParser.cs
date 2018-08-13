@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml;
 using SetMeta.Entities;
+using SetMeta.Util;
 
 namespace SetMeta.Abstract
 {
@@ -17,7 +18,7 @@ namespace SetMeta.Abstract
 
         public static OptionSetParser Create(string version)
         {
-            if (version == null) throw new ArgumentNullException(nameof(version));
+            Validate.NotNull(version, nameof(version));
 
             lock (OptionSetParsers)
             {
@@ -34,7 +35,7 @@ namespace SetMeta.Abstract
 
         public static OptionSetParser Create(Stream stream)
         {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
+            Validate.NotNull(stream, nameof(stream));
 
             using (var reader = new XmlTextReader(stream))
             {
@@ -44,7 +45,7 @@ namespace SetMeta.Abstract
 
         public static OptionSetParser Create(XmlTextReader reader)
         {
-            if (reader == null) throw new ArgumentNullException(nameof(reader));
+            Validate.NotNull(reader, nameof(reader));
 
             try
             {
@@ -68,13 +69,13 @@ namespace SetMeta.Abstract
             }
 
             var name = reader.Name;
-            if (name != "optionSet")
+            if (name != Keys.OptionSet)
                 throw new InvalidOperationException("Data is not 'optionSet'.");
 
-            if (!reader.MoveToAttribute("version"))
+            if (!reader.MoveToAttribute(OptionSetAttributeKeys.Version))
                 throw new InvalidOperationException("There is no 'version' attribute.");
 
-            var versionString = reader.GetAttribute("version");
+            var versionString = reader.GetAttribute(OptionSetAttributeKeys.Version);
             if (string.IsNullOrEmpty(versionString))
                 throw new InvalidOperationException("Serializer version is not set.");
 
@@ -98,7 +99,7 @@ namespace SetMeta.Abstract
 
         public OptionSet Parse(Stream stream)
         {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
+            Validate.NotNull(stream, nameof(stream));
 
             using (var reader = new XmlTextReader(stream))
             {
@@ -108,7 +109,7 @@ namespace SetMeta.Abstract
 
         public OptionSet Parse(string data)
         {
-            if (data == null) throw new ArgumentNullException(nameof(data));
+            Validate.NotNull(data, nameof(data));
 
             using (var textReader = new StringReader(data))
             using (var reader = new XmlTextReader(textReader))

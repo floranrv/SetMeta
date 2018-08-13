@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using AutoFixture;
 using AutoFixture.Dsl;
+using Moq;
 using NUnit.Framework;
 
 namespace SetMeta.Tests
@@ -23,7 +24,7 @@ namespace SetMeta.Tests
             TearDownInner();
         }
 
-        public T Dep<T>()
+        public T Dep<T>(MockBehavior mockBehavior = MockBehavior.Default)
         {
             return AutoFixture.Freeze<T>();
         }

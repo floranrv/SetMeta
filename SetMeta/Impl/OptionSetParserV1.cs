@@ -7,14 +7,14 @@ using SetMeta.Util;
 
 namespace SetMeta.Impl
 {
-    public class OptionSetParserV1
+    internal class OptionSetParserV1
         : OptionSetParser
     {
         public override string Version => "1";
 
         public override OptionSet Parse(XmlTextReader reader)
         {
-            if (reader == null) throw new ArgumentNullException(nameof(reader));
+            Validate.NotNull(reader, nameof(reader));
 
             var optionSet = new OptionSet();
             var document = XDocument.Load(reader);
@@ -24,7 +24,7 @@ namespace SetMeta.Impl
 
             optionSet.Version = Version;
 
-            foreach (var element in body.Elements("option"))
+            foreach (var element in body.Elements(Keys.Option))
             {
                 optionSet.Options.Add(ParseOption(element));
             }
@@ -36,11 +36,11 @@ namespace SetMeta.Impl
         {
             var option = new Option();
 
-            option.Name = root.GetAttributeValue<string>("name");
-            option.DisplayName = root.GetAttributeValue<string>("displayName");
-            option.Description = root.TryGetAttributeValue<string>("description", null);
-            option.DefaultValue = root.TryGetAttributeValue<string>("defaultValue", null);
-            option.ValueType = root.TryGetAttributeValue("valueType", OptionValueType.String);
+            option.Name = root.GetAttributeValue<string>(OptionAttributeKeys.Name);
+            option.DisplayName = root.TryGetAttributeValue(OptionAttributeKeys.DisplayName, OptionAttributeDefaults.DisplayName);
+            option.Description = root.TryGetAttributeValue(OptionAttributeKeys.Description, OptionAttributeDefaults.Description);
+            option.DefaultValue = root.TryGetAttributeValue(OptionAttributeKeys.DefaultValue, OptionAttributeDefaults.DefaultValue);
+            option.ValueType = root.TryGetAttributeValue(OptionAttributeKeys.ValueType, OptionAttributeDefaults.ValueType);
 
             return option;
         }
