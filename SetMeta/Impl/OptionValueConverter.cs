@@ -23,7 +23,8 @@ namespace SetMeta.Impl
 
         public string GetStringValue(T value, IFormatProvider formatProvider)
         {
-            if (formatProvider == null) throw new ArgumentNullException(nameof(formatProvider));
+            Validate.NotNull(formatProvider, nameof(formatProvider));
+            
             if (value == null)
                 return null;
 
