@@ -11,29 +11,29 @@
 
     internal static class Keys
     {
-        public static string OptionSet = "optionSet";
-        public static string Option = "option";
+        public const string OptionSet = "optionSet";
+        public const string Option = "option";
     }
 
     internal static class OptionSetAttributeKeys
     {
-        public static string Version = "version";
+        public const string Version = "version";
     }
 
     internal static class OptionAttributeKeys
     {
-        public static string Name = "name";
-        public static string DisplayName = "displayName";
-        public static string Description = "description";
-        public static string DefaultValue = "defaultValue";
-        public static string ValueType = "valueType";
+        public const string Name = "name";
+        public const string DisplayName = "displayName";
+        public const string Description = "description";
+        public const string DefaultValue = "defaultValue";
+        public const string ValueType = "valueType";
     }
 
     internal static class OptionAttributeDefaults
     {
-        public static string DisplayName = null;
-        public static string Description = null;
-        public static object DefaultValue = null;
-        public static OptionValueType ValueType = OptionValueType.String;
+        public const string DisplayName = null;
+        public const string Description = null;
+        public const object DefaultValue = null;
+        public const OptionValueType ValueType = OptionValueType.String;
     }
 }

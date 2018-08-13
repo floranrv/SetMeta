@@ -3,18 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using AutoFixture;
 using AutoFixture.Kernel;
 using FluentAssertions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 using SetMeta.Abstract;
 using SetMeta.Entities;
 using SetMeta.Impl;
 using SetMeta.Tests.Util;
+using SetMeta.Util;
 using XsdIterator;
+using Assert = NUnit.Framework.Assert;
 
 namespace SetMeta.Tests.Impl
 {
@@ -74,19 +78,55 @@ namespace SetMeta.Tests.Impl
             actual.Should().BeEquivalentTo(expected);
         }
 
-        [Test, TestCaseSource(typeof(OptionSetParserV1TestFixture), nameof(OptionKeyValuePairs))]
-        public void Parse_WithOnlyRequaredAttributes_ReturnNotNul1l(string attributeName, object attributeValue)
+        [TestCase(OptionAttributeKeys.Name, typeof(string), nameof(Option.Name))]
+        [TestCase(OptionAttributeKeys.DefaultValue, typeof(string), nameof(Option.DefaultValue))]
+        [TestCase(OptionAttributeKeys.Description, typeof(string), nameof(Option.Description))]
+        [TestCase(OptionAttributeKeys.DisplayName, typeof(string), nameof(Option.DisplayName))]
+        [TestCase(OptionAttributeKeys.ValueType, typeof(OptionValueType), nameof(Option.ValueType))]
+        [TestCategory("Option")]
+        public void Parse_WhenItPresentInOption_ShouldReadAttribute(string attributeName, Type attributeValueType, string propertyName)
         {
+            DataConversion.AddParser<object>((delegate(string input, out object value)
+            {
+                value = input;
+                return true;
+            }));
+
+            var attributeValue = GetNextValue(attributeValueType);
+
             var document = GenerateDocumentWithOneOption(a => a.Use == XmlSchemaUse.Required || a.Name == attributeName, attributeName, attributeValue);
+
+            var actual = Sut.Parse(CreateReader(document));
+
+            Assert.That(actual.Options, Is.Not.Null);
+            Assert.That(actual.Version, Is.EqualTo("1"));          
+
+            PropertyInfo propertyInfo = typeof(Option).GetProperty(propertyName);
+            Assert.That(propertyInfo.GetValue(actual.Options[0]), Is.EqualTo(attributeValue));
+        }
+
+        [TestCase(OptionAttributeKeys.DefaultValue, typeof(string), nameof(Option.DefaultValue), OptionAttributeDefaults.DefaultValue)]
+        [TestCase(OptionAttributeKeys.Description, typeof(string), nameof(Option.Description), OptionAttributeDefaults.Description)]
+        [TestCase(OptionAttributeKeys.DisplayName, typeof(string), nameof(Option.DisplayName), OptionAttributeDefaults.DisplayName)]
+        [TestCase(OptionAttributeKeys.ValueType, typeof(OptionValueType), nameof(Option.ValueType), OptionAttributeDefaults.ValueType)]
+        [TestCategory("Option")]
+        public void Parse_WhenItAbsentInOption_ShouldReturnDefaultValue(string attributeName, Type attributeValueType, string propertyName, object attributeValue)
+        {
+            DataConversion.AddParser<object>((delegate (string input, out object value)
+            {
+                value = input;
+                return true;
+            }));
+
+            var document = GenerateDocumentWithOneOption(a => a.Use == XmlSchemaUse.Required);
 
             var actual = Sut.Parse(CreateReader(document));
 
             Assert.That(actual.Options, Is.Not.Null);
             Assert.That(actual.Version, Is.EqualTo("1"));
 
-            var expected = GetExpectedOptionSet(actual.Options[0]);
-
-            actual.Should().BeEquivalentTo(expected);
+            PropertyInfo propertyInfo = typeof(Option).GetProperty(propertyName);
+            Assert.That(propertyInfo.GetValue(actual.Options[0]), Is.EqualTo(attributeValue));
         }
 
         public static IEnumerable OptionKeyValuePairs
@@ -170,6 +210,13 @@ namespace SetMeta.Tests.Impl
         {
             var type = optionAttribute.AttributeSchemaType.Datatype.ValueType;
             var specimen = new SpecimenContext(fixture).Resolve(type);
+
+            return specimen;
+        }
+
+        private object GetNextValue(Type type)
+        {
+            var specimen = new SpecimenContext(AutoFixture).Resolve(type);
 
             return specimen;
         }
