@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Globalization;
+﻿using System.Globalization;
 using NUnit.Framework;
 using SetMeta.Abstract;
 using SetMeta.Impl;
