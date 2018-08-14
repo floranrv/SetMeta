@@ -9,7 +9,7 @@ namespace SetMeta.Entities
         public string Description { get; set; }
         public object DefaultValue { get; set; }
         public OptionValueType ValueType { get; set; }
-        public OptionBehavior Behavior { get; set; }
+        public OptionBehaviour Behaviour { get; set; }
     }
 
     internal static class Keys
@@ -30,6 +30,7 @@ namespace SetMeta.Entities
         public const string Description = "description";
         public const string DefaultValue = "defaultValue";
         public const string ValueType = "valueType";
+        public const string Behaviour = "behaviour";
     }
 
     internal static class OptionAttributeDefaults

@@ -14,19 +14,7 @@ namespace SetMeta.Tests.Impl
         {
             Assert.DoesNotThrow(() =>
             {
-                var actual = Sut.Create(optionValueType, Fake<string>());
-
-                Assert.IsNotNull(actual);
-            });
-        }
-
-        [TestCase("")]
-        [TestCase(null)]
-        public void Create_WhenWePassEmptyOrNullString_ThereShouldBeNoException(string value)
-        {
-            Assert.DoesNotThrow(() =>
-            {
-                var actual = Sut.Create(Fake<OptionValueType>(), value);
+                var actual = Sut.Create(optionValueType);
 
                 Assert.IsNotNull(actual);
             });
@@ -37,7 +25,7 @@ namespace SetMeta.Tests.Impl
         {
             var ex = Assert.Throws<InvalidEnumArgumentException>(() =>
             {
-                Sut.Create((OptionValueType)255, Fake<string>());            
+                Sut.Create((OptionValueType)255);            
             });
 
             Assert.That(ex.Message, Does.Contain("optionValueType"));

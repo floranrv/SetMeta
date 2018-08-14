@@ -91,6 +91,7 @@
   <ItemGroup>
     <Compile Include="AssertEx.cs" />
     <Compile Include="AutoFixtureBase.cs" />
+    <Compile Include="Impl\OptionBehaviourTestFixture.cs" />
     <Compile Include="Impl\OptionSetParserTestFixture.cs" />
     <Compile Include="Impl\OptionSetParserV1TestFixture.cs" />
     <Compile Include="Impl\OptionValueConverterTestFixture.cs" />
