@@ -1,4 +1,6 @@
-﻿namespace SetMeta.Entities
+﻿using SetMeta.Abstract;
+
+namespace SetMeta.Entities
 {
     public class Option
     {
@@ -7,6 +9,7 @@
         public string Description { get; set; }
         public object DefaultValue { get; set; }
         public OptionValueType ValueType { get; set; }
+        public OptionBehavior Behavior { get; set; }
     }
 
     internal static class Keys
