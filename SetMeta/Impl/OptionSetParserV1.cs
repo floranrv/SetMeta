@@ -94,14 +94,17 @@ namespace SetMeta.Impl
                     optionBehaviour = new RangedOptionBehaviour(optionValue, min, true);
                     break;
                 case "fixedList":
-                    optionBehaviour = CreateBehaviourList(root, optionValue);
+                    optionBehaviour = CreateFixedListBehaviour(root, optionValue);
+                    break;
+                case "flagList":
+                    optionBehaviour = CreateFlagListBehaviour(root, optionValue);
                     break;
             }
 
             return optionBehaviour != null;
         }
 
-        private FixedListOptionBehaviour CreateBehaviourList(XElement root, IOptionValue optionValue)
+        private List<ListItem> CreateBehaviourList(XElement root, IOptionValue optionValue)
         {
             var elements = root.Elements();
             var list = new List<ListItem>();
@@ -116,7 +119,21 @@ namespace SetMeta.Impl
                 }
             }
 
+            return list;
+        }
+
+        private FixedListOptionBehaviour CreateFixedListBehaviour(XElement root, IOptionValue optionValue)
+        {
+            var list = CreateBehaviourList(root, optionValue);
+
             return new FixedListOptionBehaviour(optionValue, list);
+        }
+
+        private FlagListOptionBehaviour CreateFlagListBehaviour(XElement root, IOptionValue optionValue)
+        {
+            var list = CreateBehaviourList(root, optionValue);
+
+            return new FlagListOptionBehaviour(optionValue, list);
         }
     }
 }
