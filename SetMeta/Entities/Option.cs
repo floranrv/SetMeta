@@ -30,7 +30,6 @@ namespace SetMeta.Entities
         public const string Description = "description";
         public const string DefaultValue = "defaultValue";
         public const string ValueType = "valueType";
-        public const string Behaviour = "behaviour";
     }
 
     internal static class OptionAttributeDefaults

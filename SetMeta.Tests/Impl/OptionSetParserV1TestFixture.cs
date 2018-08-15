@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -11,6 +12,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 using SetMeta.Abstract;
+using SetMeta.Behaviours;
 using SetMeta.Entities;
 using SetMeta.Impl;
 using SetMeta.Tests.Util;
@@ -36,6 +38,17 @@ namespace SetMeta.Tests.Impl
                     return TraverseXmlSchema(xmlSchema);
                 }
             });
+        }
+
+        [Test]
+        public void OptionSetParserV1_WhenWePassNull_ThrowException()
+        {
+            void Delegate()
+            {
+                new OptionSetParserV1(null);
+            }
+
+            AssertEx.ThrowsArgumentNullException(Delegate, "optionValueFactory");
         }
 
         [Test]
@@ -134,13 +147,17 @@ namespace SetMeta.Tests.Impl
             var optionSet = new OptionSet();
             optionSet.Version = "1";
 
+            var optionValueFactory = new OptionValueFactory();
+            var optionValue = optionValueFactory.Create(OptionValueType.String);
+
             optionSet.Options.Add(new Option
                 {
                     Name = actual.Name,
                     DisplayName = OptionAttributeDefaults.DisplayName,
                     Description = OptionAttributeDefaults.Description,
                     DefaultValue = OptionAttributeDefaults.DefaultValue,
-                    ValueType = OptionAttributeDefaults.ValueType
+                    ValueType = OptionAttributeDefaults.ValueType,
+                    Behaviour = new SimpleOptionBehaviour(optionValue)
                 });
 
             return optionSet;
