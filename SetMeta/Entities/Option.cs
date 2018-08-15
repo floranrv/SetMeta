@@ -1,4 +1,7 @@
-﻿using SetMeta.Abstract;
+﻿using System.Linq.Expressions;
+using SetMeta.Abstract;
+using SetMeta.Behaviours;
+using SetMeta.Impl;
 
 namespace SetMeta.Entities
 {
@@ -30,7 +33,6 @@ namespace SetMeta.Entities
         public const string Description = "description";
         public const string DefaultValue = "defaultValue";
         public const string ValueType = "valueType";
-        public const string Behaviour = "behaviour";
     }
 
     internal static class OptionAttributeDefaults
