@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SetMeta.Abstract
+﻿namespace SetMeta.Abstract
 {
     public interface IOptionValueFactory
     {

@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Kernel;
-using NUnit.Framework;
 
 namespace SetMeta.Tests
 {
@@ -10,13 +9,12 @@ namespace SetMeta.Tests
         where TSut : class, TContract
         where TContract : class
     {
-        public TContract Sut => AutoFixture.Freeze<TSut>();
+        protected TContract Sut => AutoFixture.Freeze<TSut>();
         
         ////public void Chain<TParent, TChild>(Func<TParent, TChild> expression) where TParent : class where TChild : class
         ////{
         ////    Dep<TParent>().Stub(expression).Return(Dep<TChild>());
         ////}
-
 
         protected override void SetUpInner()
         {

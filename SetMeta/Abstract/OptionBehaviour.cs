@@ -1,5 +1,4 @@
 ﻿using System;
-using SetMeta.Impl;
 
 namespace SetMeta.Abstract
 {
@@ -18,7 +17,7 @@ namespace SetMeta.Abstract
         /// <summary>
         /// Объект со значением настройи
         /// </summary>
-        protected IOptionValue OptionValue { get; private set; }
+        protected IOptionValue OptionValue { get; }
 
         /// <summary>
         /// Получает значение настройки из строки

@@ -1,7 +1,4 @@
-﻿using System.Linq.Expressions;
-using SetMeta.Abstract;
-using SetMeta.Behaviours;
-using SetMeta.Impl;
+﻿using SetMeta.Abstract;
 
 namespace SetMeta.Entities
 {

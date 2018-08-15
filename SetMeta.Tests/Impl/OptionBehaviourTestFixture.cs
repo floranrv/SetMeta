@@ -1,8 +1,6 @@
-﻿using Moq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SetMeta.Abstract;
 using SetMeta.Impl;
-using SetMeta.Tests.Util;
 
 namespace SetMeta.Tests.Impl
 {
@@ -45,6 +43,7 @@ namespace SetMeta.Tests.Impl
         {
             void Delegate()
             {
+                // ReSharper disable once ObjectCreationAsStatement
                 new OptionBehaviourTest(null);
             }
 
