@@ -60,6 +60,8 @@ namespace SetMeta.Tests.Util
             }
 
             var ctor = type.GetConstructor(new[] { typeof(MockBehavior) });
+            if (ctor == null)
+                throw new InvalidOperationException($"Ctor not found for type {type.FullName}.");
 
             return new IMethod[]
                 {

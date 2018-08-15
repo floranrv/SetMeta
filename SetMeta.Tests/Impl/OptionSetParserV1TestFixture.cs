@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -86,11 +84,11 @@ namespace SetMeta.Tests.Impl
         [TestCategory("Option")]
         public void Parse_WhenItPresentInOption_ShouldReadAttribute(string attributeName, Type attributeValueType, string propertyName)
         {
-            DataConversion.AddParser<object>((delegate(string input, out object value)
+            DataConversion.AddParser(delegate(string input, out object value)
             {
                 value = input;
                 return true;
-            }));
+            });
 
             var attributeValue = GetNextValue(attributeValueType);
 
@@ -101,7 +99,8 @@ namespace SetMeta.Tests.Impl
             Assert.That(actual.Options, Is.Not.Null);
             Assert.That(actual.Version, Is.EqualTo("1"));          
 
-            PropertyInfo propertyInfo = typeof(Option).GetProperty(propertyName);
+            var propertyInfo = typeof(Option).GetProperty(propertyName);
+            Assert.That(propertyInfo, Is.Not.Null);
             Assert.That(propertyInfo.GetValue(actual.Options[0]), Is.EqualTo(attributeValue));
         }
 
@@ -112,11 +111,11 @@ namespace SetMeta.Tests.Impl
         [TestCategory("Option")]
         public void Parse_WhenItAbsentInOption_ShouldReturnDefaultValue(string attributeName, Type attributeValueType, string propertyName, object attributeValue)
         {
-            DataConversion.AddParser<object>((delegate (string input, out object value)
+            DataConversion.AddParser(delegate (string input, out object value)
             {
                 value = input;
                 return true;
-            }));
+            });
 
             var document = GenerateDocumentWithOneOption(a => a.Use == XmlSchemaUse.Required);
 
@@ -125,19 +124,9 @@ namespace SetMeta.Tests.Impl
             Assert.That(actual.Options, Is.Not.Null);
             Assert.That(actual.Version, Is.EqualTo("1"));
 
-            PropertyInfo propertyInfo = typeof(Option).GetProperty(propertyName);
+            var propertyInfo = typeof(Option).GetProperty(propertyName);
+            Assert.That(propertyInfo, Is.Not.Null);
             Assert.That(propertyInfo.GetValue(actual.Options[0]), Is.EqualTo(attributeValue));
-        }
-
-        public static IEnumerable OptionKeyValuePairs
-        {
-            get
-            {
-                var fixture = new Fixture();
-
-                yield return new TestCaseData(OptionAttributeKeys.DisplayName, GetNextValue(fixture, OptionInformator.Value.OptionAttributes.First(o => o.Name == OptionAttributeKeys.DisplayName)));
-                yield return new TestCaseData(OptionAttributeKeys.DefaultValue, GetNextValue(fixture, OptionInformator.Value.OptionAttributes.First(o => o.Name == OptionAttributeKeys.DefaultValue)));
-            }
         }
 
         private OptionSet GetExpectedOptionSet(Option actual)
