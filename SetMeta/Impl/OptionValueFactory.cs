@@ -7,7 +7,7 @@ namespace SetMeta.Impl
     public class OptionValueFactory
         : IOptionValueFactory
     {
-        public IOptionValue Create(OptionValueType optionValueType, string value)
+        public IOptionValue Create(OptionValueType optionValueType)
         {
             switch (optionValueType)
             {

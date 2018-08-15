@@ -4,6 +4,6 @@ namespace SetMeta.Abstract
 {
     public interface IOptionValueFactory
     {
-        IOptionValue Create(OptionValueType optionValueType, string value);
+        IOptionValue Create(OptionValueType optionValueType);
     }
 }
