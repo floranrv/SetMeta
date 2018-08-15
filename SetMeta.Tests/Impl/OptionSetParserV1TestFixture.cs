@@ -149,8 +149,6 @@ namespace SetMeta.Tests.Impl
         {
             var optionValueFactory = new OptionValueFactory();
             var optionValue = optionValueFactory.Create(OptionValueType.String);
-            //const string maxValue = "Test max";
-            //const string minValue = "Test min";
 
             var document = GenerateDocumentWithOneOption(a => a.Use == XmlSchemaUse.Required, null, null, CreateRangedBehaviourMinMax(optionValue, minValue, maxValue, isMin));
 
@@ -177,6 +175,47 @@ namespace SetMeta.Tests.Impl
                 Assert.That(rangedOptionBehaviour.IsMaxValueExists, Is.False);
                 Assert.That(rangedOptionBehaviour.IsMinValueExists, Is.True);
             }
+        }
+
+        [Test]
+        public void Parse_WhenItPresentFixedListBehaviour_ShouldReturnCorrectBehaviour()
+        {
+            var optionValueFactory = new OptionValueFactory();
+            var optionValue = optionValueFactory.Create(OptionValueType.String);
+            var list = new List<ListItem>
+            {
+                new ListItem
+                {
+                    Value = "Value 1",
+                    DisplayValue = "Display Value 1"
+                },
+                new ListItem
+                {
+                    Value = "Value 2",
+                    DisplayValue = "Display Value 2"
+                },
+                new ListItem
+                {
+                    Value = "Value 3",
+                    DisplayValue = "Display Value 3"
+                },
+                new ListItem
+                {
+                    Value = "Value 4",
+                    DisplayValue = "Display Value 4"
+                },
+            };
+
+            var document = GenerateDocumentWithOneOption(a => a.Use == XmlSchemaUse.Required, null, null, CreateFixedListBehaviour(optionValue, list));
+
+            var actual = Sut.Parse(CreateReader(document));
+
+            Assert.That(actual.Options[0].Behaviour, Is.TypeOf<FixedListOptionBehaviour>());
+
+            var fixedListOptionBehaviour = (FixedListOptionBehaviour) actual.Options[0].Behaviour;
+
+            Assert.That(fixedListOptionBehaviour.ListItems, Is.EqualTo(list));
+
         }
 
         private OptionSet GetExpectedOptionSet(Option actual)
@@ -314,6 +353,18 @@ namespace SetMeta.Tests.Impl
             {
                 return null;
             }
+        }
+
+        private Func<XElement> CreateFixedListBehaviour(IOptionValue optionValue, IEnumerable<ListItem> list)
+        {
+            var fixedList = new XElement("fixedList");
+
+            foreach (var listItem in list)
+            {
+                fixedList.Add(new XElement("listItem", new XAttribute("value", listItem.Value.ToString()), new XAttribute("displayValue", listItem.DisplayValue)));
+            }           
+
+            return () => fixedList;
         }
     }
 }
