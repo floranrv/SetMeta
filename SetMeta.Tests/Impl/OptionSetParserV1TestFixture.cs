@@ -142,6 +142,43 @@ namespace SetMeta.Tests.Impl
             Assert.That(propertyInfo.GetValue(actual.Options[0]), Is.EqualTo(attributeValue));
         }
 
+        [TestCase("Test max", "Test min", null)]
+        [TestCase("Test max", null, false)]
+        [TestCase(null, "Test min", true)]
+        public void Parse_WhenItPresentRangedBehaviour_ShouldReturnCorrectBehaviour(string maxValue, string minValue, object isMin)
+        {
+            var optionValueFactory = new OptionValueFactory();
+            var optionValue = optionValueFactory.Create(OptionValueType.String);
+            //const string maxValue = "Test max";
+            //const string minValue = "Test min";
+
+            var document = GenerateDocumentWithOneOption(a => a.Use == XmlSchemaUse.Required, null, null, CreateRangedBehaviourMinMax(optionValue, minValue, maxValue, isMin));
+
+            var actual = Sut.Parse(CreateReader(document));
+
+            Assert.That(actual.Options[0].Behaviour, Is.TypeOf<RangedOptionBehaviour>());
+
+            var rangedOptionBehaviour = (RangedOptionBehaviour) actual.Options[0].Behaviour;
+
+            Assert.That(rangedOptionBehaviour.MaxValue, Is.EqualTo(maxValue));
+            Assert.That(rangedOptionBehaviour.MinValue, Is.EqualTo(minValue));
+
+            if (isMin == null)
+            {
+                Assert.That(rangedOptionBehaviour.IsMaxValueExists, Is.True);
+                Assert.That(rangedOptionBehaviour.IsMinValueExists, Is.True);
+            }else if (!(bool)isMin)
+            {
+                Assert.That(rangedOptionBehaviour.IsMaxValueExists, Is.True);
+                Assert.That(rangedOptionBehaviour.IsMinValueExists, Is.False);
+            }
+            else if ((bool)isMin)
+            {
+                Assert.That(rangedOptionBehaviour.IsMaxValueExists, Is.False);
+                Assert.That(rangedOptionBehaviour.IsMinValueExists, Is.True);
+            }
+        }
+
         private OptionSet GetExpectedOptionSet(Option actual)
         {
             var optionSet = new OptionSet();
@@ -176,17 +213,17 @@ namespace SetMeta.Tests.Impl
             return new XmlTextReader(stream);
         }
 
-        private XDocument GenerateDocumentWithOneOption(Predicate<XmlSchemaAttribute> expectedAttribute, string name = null, object value = null)
+        private XDocument GenerateDocumentWithOneOption(Predicate<XmlSchemaAttribute> expectedAttribute, string name = null, object value = null, Func<XElement> behaviourFunc = null)
         {
-            return GenerateDocument(GenerateOptionFunc(expectedAttribute, name, value));
+            return GenerateDocument(GenerateOptionFunc(expectedAttribute, name, value, behaviourFunc));
         }
 
-        private Func<IEnumerable<XElement>> GenerateOptionFunc(Predicate<XmlSchemaAttribute> expectedAttribute, string name = null, object value = null)
+        private Func<IEnumerable<XElement>> GenerateOptionFunc(Predicate<XmlSchemaAttribute> expectedAttribute, string name = null, object value = null, Func<XElement> behaviourFunc = null)
         {
-            return () => new[] { GenerateOption(expectedAttribute, name, value) };
+            return () => new[] { GenerateOption(expectedAttribute, name, value, behaviourFunc) };
         }
 
-        private XElement GenerateOption(Predicate<XmlSchemaAttribute> expectedAttribute, string name = null, object value = null)
+        private XElement GenerateOption(Predicate<XmlSchemaAttribute> expectedAttribute, string name = null, object value = null, Func<XElement> behaviourFunc = null)
         {
             var option = new XElement(Keys.Option);
 
@@ -197,6 +234,11 @@ namespace SetMeta.Tests.Impl
                     name == null || name != optionAttribute.Name
                         ? GetNextValue(optionAttribute)
                         : value);
+            }
+
+            if (behaviourFunc != null)
+            {
+                option.Add(behaviourFunc());
             }
 
             return option;
@@ -252,6 +294,26 @@ namespace SetMeta.Tests.Impl
             globalElement.Accept(iterator);
 
             return visitor;
+        }
+
+        private Func<XElement> CreateRangedBehaviourMinMax(IOptionValue optionValue, string minValue, string maxValue, object isMin = null)
+        {
+            if (isMin == null)
+            {
+                return () => new XElement("rangedMinMax", new XAttribute("min", optionValue.GetStringValue(minValue)), new XAttribute("max", optionValue.GetStringValue(maxValue)));
+            }
+            else if ((bool)isMin)
+            {
+                return () => new XElement("rangedMin", new XAttribute("min", optionValue.GetStringValue(minValue)));
+            }
+            else if (!(bool)isMin)
+            {
+                return () => new XElement("rangedMax", new XAttribute("max", optionValue.GetStringValue(maxValue)));               
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

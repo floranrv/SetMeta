@@ -50,30 +50,51 @@ namespace SetMeta.Impl
             option.DefaultValue = root.TryGetAttributeValue(OptionAttributeKeys.DefaultValue, OptionAttributeDefaults.DefaultValue);
             option.ValueType = root.TryGetAttributeValue(OptionAttributeKeys.ValueType, OptionAttributeDefaults.ValueType);
             var optionValue = _optionValueFactory.Create(option.ValueType);
-            option.Behaviour = CreateBehaviour(root) ?? new SimpleOptionBehaviour(optionValue);
+            option.Behaviour = CreateBehaviour(root, optionValue);
 
             return option;
         }
 
-        private OptionBehaviour CreateBehaviour(XElement root)
+        private OptionBehaviour CreateBehaviour(XElement root, IOptionValue optionValue)
         {
             var elements = root.Elements();
 
             foreach (var element in elements)
             {
-                if (TryCreateBehaviour(element, out var optionBehaviour))
+                if (TryCreateBehaviour(element, optionValue, out var optionBehaviour))
                 {
                     return optionBehaviour;
                 }
             }
            
-            return null;
+            return new SimpleOptionBehaviour(optionValue);
         }
 
-        private bool TryCreateBehaviour(XElement root, out OptionBehaviour optionBehaviour)
+        private bool TryCreateBehaviour(XElement root, IOptionValue optionValue, out OptionBehaviour optionBehaviour)
         {
+            string name = root.Name.LocalName;
             optionBehaviour = null;
-            return false;
+            string max = null;
+            string min = null;
+
+            switch (name)
+            {
+                case "rangedMinMax":
+                    min = root.GetAttributeValue<string>("min");
+                    max = root.GetAttributeValue<string>("max");
+                    optionBehaviour = new RangedOptionBehaviour(optionValue, min, max);
+                    break;
+                case "rangedMax":
+                    max = root.GetAttributeValue<string>("max");
+                    optionBehaviour = new RangedOptionBehaviour(optionValue, max, false);
+                    break;
+                case "rangedMin":
+                    min = root.GetAttributeValue<string>("min");
+                    optionBehaviour = new RangedOptionBehaviour(optionValue, min, true);
+                    break;
+            }
+
+            return optionBehaviour != null;
         }
     }
 }
