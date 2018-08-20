@@ -1,0 +1,21 @@
+﻿using System;
+using SetMeta.Abstract;
+
+namespace SetMeta.Behaviours
+{
+    public class SqlFixedListOptionBehaviour
+        : OptionBehaviour
+    {
+        internal SqlFixedListOptionBehaviour(IOptionValue optionValue, string query, string valueMember = "value", string displayMember = "displayValue")
+            : base(optionValue)
+        {
+            Query = query ?? throw new ArgumentNullException(nameof(query));
+            ValueMember = valueMember;
+            DisplayMember = displayMember;
+        }
+
+        public string Query { get; private set; }
+        public string ValueMember { get; private set; }
+        public string DisplayMember { get; private set; }
+    }
+}
