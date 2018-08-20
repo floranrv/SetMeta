@@ -99,6 +99,11 @@ namespace SetMeta.Impl
                 case "flagList":
                     optionBehaviour = CreateFlagListBehaviour(root, optionValue);
                     break;
+                case "multiList":
+                    var sorted = root.GetAttributeValue<bool>("sorted");
+                    var separator = root.GetAttributeValue<string>("separator");
+                    optionBehaviour = CreateMultiListBehaviour(root, optionValue, sorted, separator);
+                    break;
             }
 
             return optionBehaviour != null;
@@ -134,6 +139,13 @@ namespace SetMeta.Impl
             var list = CreateBehaviourList(root, optionValue);
 
             return new FlagListOptionBehaviour(optionValue, list);
+        }
+
+        private MultiListOptionBehaviour CreateMultiListBehaviour(XElement root, IOptionValue optionValue, bool sorted, string separator)
+        {
+            var list = CreateBehaviourList(root, optionValue);
+
+            return new MultiListOptionBehaviour(optionValue, list, sorted, separator);
         }
     }
 }
