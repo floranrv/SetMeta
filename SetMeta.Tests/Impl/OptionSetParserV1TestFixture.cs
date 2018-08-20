@@ -325,7 +325,29 @@ namespace SetMeta.Tests.Impl
             Assert.That(sqlFixedListOptionBehaviour.Query, Is.EqualTo(query));
             Assert.That(sqlFixedListOptionBehaviour.ValueMember, Is.EqualTo(memberValue));
             Assert.That(sqlFixedListOptionBehaviour.DisplayMember, Is.EqualTo(displayValue));
-        }     
+        }
+
+        [Test]
+        public void Parse_WhenItPresentSqlFlagListBehaviour_ShouldReturnCorrectBehaviour()
+        {
+            var optionValueFactory = new OptionValueFactory();
+            var optionValue = optionValueFactory.Create(OptionValueType.String);
+            var query = Fake<string>();
+            var memberValue = Fake<string>();
+            var displayValue = Fake<string>();
+
+            var document = GenerateDocumentWithOneOption(a => a.Use == XmlSchemaUse.Required, null, null, CreateSqlFlagListBehaviour(optionValue, query, memberValue, displayValue));
+
+            var actual = Sut.Parse(CreateReader(document));
+
+            Assert.That(actual.Options[0].Behaviour, Is.TypeOf<SqlFlagListOptionBehaviour>());
+
+            var sqlFlagListOptionBehaviour = (SqlFlagListOptionBehaviour)actual.Options[0].Behaviour;
+
+            Assert.That(sqlFlagListOptionBehaviour.Query, Is.EqualTo(query));
+            Assert.That(sqlFlagListOptionBehaviour.ValueMember, Is.EqualTo(memberValue));
+            Assert.That(sqlFlagListOptionBehaviour.DisplayMember, Is.EqualTo(displayValue));
+        }
 
         private OptionSet GetExpectedOptionSet(Option actual)
         {
@@ -503,6 +525,11 @@ namespace SetMeta.Tests.Impl
         private Func<XElement> CreateSqlFixedListBehaviour(IOptionValue optionValue, string query, string memberValue, string displayValue)
         {
             return () => new XElement("sqlFixedList", new XAttribute("query", optionValue.GetStringValue(query)), new XAttribute("valueFieldName", optionValue.GetStringValue(memberValue)), new XAttribute("displayValueFieldName", optionValue.GetStringValue(displayValue)));
+        }
+
+        private Func<XElement> CreateSqlFlagListBehaviour(IOptionValue optionValue, string query, string memberValue, string displayValue)
+        {
+            return () => new XElement("sqlFlagList", new XAttribute("query", optionValue.GetStringValue(query)), new XAttribute("valueFieldName", optionValue.GetStringValue(memberValue)), new XAttribute("displayValueFieldName", optionValue.GetStringValue(displayValue)));
         }
     }
 }
