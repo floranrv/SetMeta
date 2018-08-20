@@ -11,7 +11,7 @@ namespace SetMeta.Tests.Impl
         : AutoFixtureBase
     {
         [Test]
-        public void FixedListOptionBehaviour_WhenWePassNull_ThrowException()
+        public void FlagListOptionBehaviour_WhenWePassNull_ThrowException()
         {
             void Delegate()
             {
@@ -22,7 +22,7 @@ namespace SetMeta.Tests.Impl
         }
 
         [Test]
-        public void RangedOptionBehaviour_WhenWePassValidItems_TheyAssignedCorrectly()
+        public void FlagListOptionBehaviour_WhenWePassValidItems_TheyAssignedCorrectly()
         {
             var optionValueFactory = new OptionValueFactory();
             var optionValue = optionValueFactory.Create(OptionValueType.String);

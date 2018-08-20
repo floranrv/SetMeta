@@ -93,6 +93,7 @@
     <Compile Include="AutoFixtureBase.cs" />
     <Compile Include="Impl\FixedListOptionBehaviourTestFixture.cs" />
     <Compile Include="Impl\FlagListOptionBehaviourTestFixture.cs" />
+    <Compile Include="Impl\MultiListOptionBehaviourTestFixture.cs" />
     <Compile Include="Impl\OptionBehaviourTestFixture.cs" />
     <Compile Include="Impl\OptionSetParserTestFixture.cs" />
     <Compile Include="Impl\OptionSetParserV1TestFixture.cs" />

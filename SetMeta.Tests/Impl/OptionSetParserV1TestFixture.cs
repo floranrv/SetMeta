@@ -259,7 +259,52 @@ namespace SetMeta.Tests.Impl
             Assert.That(flagListOptionBehaviour.ListItems, Is.EqualTo(list));
 
         }
-        
+
+        [TestCase(true, "/")]
+        [TestCase(true, ";")]
+        [TestCase(false, "/")]
+        public void Parse_WhenItPresentMultiListBehaviour_ShouldReturnCorrectBehaviour(bool sorted, string separator)
+        {
+            var optionValueFactory = new OptionValueFactory();
+            var optionValue = optionValueFactory.Create(OptionValueType.String);
+            var list = new List<ListItem>
+            {
+                new ListItem
+                {
+                    Value = "Value 1",
+                    DisplayValue = "Display Value 1"
+                },
+                new ListItem
+                {
+                    Value = "Value 2",
+                    DisplayValue = "Display Value 2"
+                },
+                new ListItem
+                {
+                    Value = "Value 3",
+                    DisplayValue = "Display Value 3"
+                },
+                new ListItem
+                {
+                    Value = "Value 4",
+                    DisplayValue = "Display Value 4"
+                },
+            };
+
+            var document = GenerateDocumentWithOneOption(a => a.Use == XmlSchemaUse.Required, null, null, CreateMultiListBehaviour(optionValue, list, sorted, separator));
+
+            var actual = Sut.Parse(CreateReader(document));
+
+            Assert.That(actual.Options[0].Behaviour, Is.TypeOf<MultiListOptionBehaviour>());
+
+            var multiListOptionBehaviour = (MultiListOptionBehaviour)actual.Options[0].Behaviour;
+
+            Assert.That(multiListOptionBehaviour.ListItems, Is.EqualTo(list));
+            Assert.That(multiListOptionBehaviour.Sorted, Is.EqualTo(sorted));
+            Assert.That(multiListOptionBehaviour.Separator, Is.EqualTo(separator));
+
+        }
+
         private OptionSet GetExpectedOptionSet(Option actual)
         {
             var optionSet = new OptionSet();
@@ -421,5 +466,16 @@ namespace SetMeta.Tests.Impl
             return () => fixedList;
         }
 
+        private Func<XElement> CreateMultiListBehaviour(IOptionValue optionValue, IEnumerable<ListItem> list, bool sorted = false, string separator = ";")
+        {
+            var fixedList = new XElement("multiList", new XAttribute("sorted", sorted), new XAttribute("separator", separator));
+
+            foreach (var listItem in list)
+            {
+                fixedList.Add(new XElement("listItem", new XAttribute("value", listItem.Value.ToString()), new XAttribute("displayValue", listItem.DisplayValue)));
+            }
+
+            return () => fixedList;
+        }
     }
 }
