@@ -218,6 +218,7 @@ namespace SetMeta.Tests.Impl
 
         }
 
+
         [Test]
         public void Parse_WhenItPresentFlagListBehaviour_ShouldReturnCorrectBehaviour()
         {
