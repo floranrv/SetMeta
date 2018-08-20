@@ -407,17 +407,5 @@ namespace SetMeta.Tests.Impl
 
             return () => fixedList;
         }
-
-        private Func<XElement> CreateFlagListBehaviour(IOptionValue optionValue, IEnumerable<ListItem> list)
-        {
-            var fixedList = new XElement("flagList");
-
-            foreach (var listItem in list)
-            {
-                fixedList.Add(new XElement("listItem", new XAttribute("value", listItem.Value.ToString()), new XAttribute("displayValue", listItem.DisplayValue)));
-            }
-
-            return () => fixedList;
-        }
     }
 }
