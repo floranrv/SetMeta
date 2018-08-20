@@ -104,6 +104,12 @@ namespace SetMeta.Impl
                     var separator = root.GetAttributeValue<string>("separator");
                     optionBehaviour = CreateMultiListBehaviour(root, optionValue, sorted, separator);
                     break;
+                case "sqlFixedList":
+                    var query = root.GetAttributeValue<string>("query");
+                    var valueFieldName = root.GetAttributeValue<string>("valueFieldName");
+                    var displayValueFieldName = root.GetAttributeValue<string>("displayValueFieldName");
+                    optionBehaviour = new SqlFixedListOptionBehaviour(optionValue, query,valueFieldName, displayValueFieldName);
+                    break;
             }
 
             return optionBehaviour != null;

@@ -305,6 +305,28 @@ namespace SetMeta.Tests.Impl
 
         }
 
+        [Test]
+        public void Parse_WhenItPresentSqlFixedListBehaviour_ShouldReturnCorrectBehaviour()
+        {
+            var optionValueFactory = new OptionValueFactory();
+            var optionValue = optionValueFactory.Create(OptionValueType.String);
+            var query = Fake<string>();
+            var memberValue = Fake<string>();
+            var displayValue = Fake<string>();
+
+            var document = GenerateDocumentWithOneOption(a => a.Use == XmlSchemaUse.Required, null, null, CreateSqlFixedListBehaviour(optionValue, query, memberValue, displayValue));
+
+            var actual = Sut.Parse(CreateReader(document));
+
+            Assert.That(actual.Options[0].Behaviour, Is.TypeOf<SqlFixedListOptionBehaviour>());
+
+            var sqlFixedListOptionBehaviour = (SqlFixedListOptionBehaviour)actual.Options[0].Behaviour;
+
+            Assert.That(sqlFixedListOptionBehaviour.Query, Is.EqualTo(query));
+            Assert.That(sqlFixedListOptionBehaviour.ValueMember, Is.EqualTo(memberValue));
+            Assert.That(sqlFixedListOptionBehaviour.DisplayMember, Is.EqualTo(displayValue));
+        }     
+
         private OptionSet GetExpectedOptionSet(Option actual)
         {
             var optionSet = new OptionSet();
@@ -456,26 +478,31 @@ namespace SetMeta.Tests.Impl
 
         private Func<XElement> CreateFlagListBehaviour(IOptionValue optionValue, IEnumerable<ListItem> list)
         {
-            var fixedList = new XElement("flagList");
+            var flagList = new XElement("flagList");
 
             foreach (var listItem in list)
             {
-                fixedList.Add(new XElement("listItem", new XAttribute("value", listItem.Value.ToString()), new XAttribute("displayValue", listItem.DisplayValue)));
+                flagList.Add(new XElement("listItem", new XAttribute("value", listItem.Value.ToString()), new XAttribute("displayValue", listItem.DisplayValue)));
             }
 
-            return () => fixedList;
+            return () => flagList;
         }
 
         private Func<XElement> CreateMultiListBehaviour(IOptionValue optionValue, IEnumerable<ListItem> list, bool sorted = false, string separator = ";")
         {
-            var fixedList = new XElement("multiList", new XAttribute("sorted", sorted), new XAttribute("separator", separator));
+            var multiList = new XElement("multiList", new XAttribute("sorted", sorted), new XAttribute("separator", optionValue.GetStringValue(separator)));
 
             foreach (var listItem in list)
             {
-                fixedList.Add(new XElement("listItem", new XAttribute("value", listItem.Value.ToString()), new XAttribute("displayValue", listItem.DisplayValue)));
+                multiList.Add(new XElement("listItem", new XAttribute("value", listItem.Value.ToString()), new XAttribute("displayValue", listItem.DisplayValue)));
             }
 
-            return () => fixedList;
+            return () => multiList;
+        }
+
+        private Func<XElement> CreateSqlFixedListBehaviour(IOptionValue optionValue, string query, string memberValue, string displayValue)
+        {
+            return () => new XElement("sqlFixedList", new XAttribute("query", optionValue.GetStringValue(query)), new XAttribute("valueFieldName", optionValue.GetStringValue(memberValue)), new XAttribute("displayValueFieldName", optionValue.GetStringValue(displayValue)));
         }
     }
 }
