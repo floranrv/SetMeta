@@ -218,6 +218,7 @@ namespace SetMeta.Tests.Impl
 
         }
 
+
         [Test]
         public void Parse_WhenItPresentFlagListBehaviour_ShouldReturnCorrectBehaviour()
         {
@@ -258,7 +259,7 @@ namespace SetMeta.Tests.Impl
             Assert.That(flagListOptionBehaviour.ListItems, Is.EqualTo(list));
 
         }
-
+        
         private OptionSet GetExpectedOptionSet(Option actual)
         {
             var optionSet = new OptionSet();
@@ -419,5 +420,6 @@ namespace SetMeta.Tests.Impl
 
             return () => fixedList;
         }
+
     }
 }
