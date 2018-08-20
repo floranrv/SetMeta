@@ -218,6 +218,48 @@ namespace SetMeta.Tests.Impl
 
         }
 
+
+        [Test]
+        public void Parse_WhenItPresentFlagListBehaviour_ShouldReturnCorrectBehaviour()
+        {
+            var optionValueFactory = new OptionValueFactory();
+            var optionValue = optionValueFactory.Create(OptionValueType.String);
+            var list = new List<ListItem>
+            {
+                new ListItem
+                {
+                    Value = "Value 1",
+                    DisplayValue = "Display Value 1"
+                },
+                new ListItem
+                {
+                    Value = "Value 2",
+                    DisplayValue = "Display Value 2"
+                },
+                new ListItem
+                {
+                    Value = "Value 3",
+                    DisplayValue = "Display Value 3"
+                },
+                new ListItem
+                {
+                    Value = "Value 4",
+                    DisplayValue = "Display Value 4"
+                },
+            };
+
+            var document = GenerateDocumentWithOneOption(a => a.Use == XmlSchemaUse.Required, null, null, CreateFlagListBehaviour(optionValue, list));
+
+            var actual = Sut.Parse(CreateReader(document));
+
+            Assert.That(actual.Options[0].Behaviour, Is.TypeOf<FlagListOptionBehaviour>());
+
+            var flagListOptionBehaviour = (FlagListOptionBehaviour)actual.Options[0].Behaviour;
+
+            Assert.That(flagListOptionBehaviour.ListItems, Is.EqualTo(list));
+
+        }
+        
         private OptionSet GetExpectedOptionSet(Option actual)
         {
             var optionSet = new OptionSet();
@@ -366,5 +408,18 @@ namespace SetMeta.Tests.Impl
 
             return () => fixedList;
         }
+
+        private Func<XElement> CreateFlagListBehaviour(IOptionValue optionValue, IEnumerable<ListItem> list)
+        {
+            var fixedList = new XElement("flagList");
+
+            foreach (var listItem in list)
+            {
+                fixedList.Add(new XElement("listItem", new XAttribute("value", listItem.Value.ToString()), new XAttribute("displayValue", listItem.DisplayValue)));
+            }
+
+            return () => fixedList;
+        }
+
     }
 }
