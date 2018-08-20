@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
 using SetMeta.Abstract;
@@ -92,9 +93,30 @@ namespace SetMeta.Impl
                     min = root.GetAttributeValue<string>("min");
                     optionBehaviour = new RangedOptionBehaviour(optionValue, min, true);
                     break;
+                case "fixedList":
+                    optionBehaviour = CreateBehaviourList(root, optionValue);
+                    break;
             }
 
             return optionBehaviour != null;
+        }
+
+        private FixedListOptionBehaviour CreateBehaviourList(XElement root, IOptionValue optionValue)
+        {
+            var elements = root.Elements();
+            var list = new List<ListItem>();
+
+            foreach (var element in elements)
+            {
+                if (element.Name.LocalName == "listItem")
+                {
+                    var value = element.GetAttributeValue<string>("value");
+                    var displayValue = element.GetAttributeValue<string>("displayValue");
+                    list.Add(new ListItem{Value = value, DisplayValue = displayValue});
+                }
+            }
+
+            return new FixedListOptionBehaviour(optionValue, list);
         }
     }
 }
