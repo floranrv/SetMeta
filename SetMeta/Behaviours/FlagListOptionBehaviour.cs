@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using SetMeta.Abstract;
 using SetMeta.Entities;
-using SetMeta.Impl;
 
 namespace SetMeta.Behaviours
 {

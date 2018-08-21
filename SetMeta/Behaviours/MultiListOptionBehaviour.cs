@@ -15,9 +15,8 @@ namespace SetMeta.Behaviours
             Separator = separator;
         }
 
-        public List<ListItem> ListItems { get; private set; }
-        public bool Sorted { get; private set; }
-        public string Separator { get; private set; }
-
+        public List<ListItem> ListItems { get; }
+        public bool Sorted { get; }
+        public string Separator { get; }
     }
 }

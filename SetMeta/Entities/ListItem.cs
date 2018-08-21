@@ -5,8 +5,14 @@
     /// </summary>
     public class ListItem
     {
-        public object Value { get; set; }
-        public string DisplayValue { get; set; }
+        public ListItem(object value, string displayValue)
+        {
+            Value = value;
+            DisplayValue = displayValue;
+        }
+
+        public object Value { get; }
+        public string DisplayValue { get; }
 
         public static bool operator ==(ListItem left, ListItem right)
         {

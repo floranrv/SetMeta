@@ -75,28 +75,27 @@ namespace SetMeta.Impl
         {
             string name = root.Name.LocalName;
             optionBehaviour = null;
-            string max = null;
-            string min = null;
-            string query = null;
-            string valueFieldName = null;
-            string displayValueFieldName = null;
-            bool sorted = false;
-            string separator = null;
-
+            
             switch (name)
             {
                 case "rangedMinMax":
-                    min = root.GetAttributeValue<string>("min");
-                    max = root.GetAttributeValue<string>("max");
+                {
+                    string min = root.GetAttributeValue<string>("min");
+                    string max = root.GetAttributeValue<string>("max");
                     optionBehaviour = new RangedOptionBehaviour(optionValue, min, max);
+                }
                     break;
                 case "rangedMax":
-                    max = root.GetAttributeValue<string>("max");
+                {
+                    string max = root.GetAttributeValue<string>("max");
                     optionBehaviour = new RangedOptionBehaviour(optionValue, max, false);
+                }
                     break;
                 case "rangedMin":
-                    min = root.GetAttributeValue<string>("min");
+                {
+                    string min = root.GetAttributeValue<string>("min");
                     optionBehaviour = new RangedOptionBehaviour(optionValue, min, true);
+                }
                     break;
                 case "fixedList":
                     optionBehaviour = CreateFixedListBehaviour(root, optionValue);
@@ -105,29 +104,37 @@ namespace SetMeta.Impl
                     optionBehaviour = CreateFlagListBehaviour(root, optionValue);
                     break;
                 case "multiList":
-                    sorted = root.GetAttributeValue<bool>("sorted");
-                    separator = root.GetAttributeValue<string>("separator");
+                {
+                    bool sorted = root.GetAttributeValue<bool>("sorted");
+                    string separator = root.GetAttributeValue<string>("separator");
                     optionBehaviour = CreateMultiListBehaviour(root, optionValue, sorted, separator);
+                }
                     break;
                 case "sqlFixedList":
-                    query = root.GetAttributeValue<string>("query");
-                    valueFieldName = root.GetAttributeValue<string>("valueFieldName");
-                    displayValueFieldName = root.GetAttributeValue<string>("displayValueFieldName");
-                    optionBehaviour = new SqlFixedListOptionBehaviour(optionValue, query,valueFieldName, displayValueFieldName);
+                {
+                    string query = root.GetAttributeValue<string>("query");
+                    string valueFieldName = root.GetAttributeValue<string>("valueFieldName");
+                    string displayValueFieldName = root.GetAttributeValue<string>("displayValueFieldName");
+                    optionBehaviour = new SqlFixedListOptionBehaviour(optionValue, query, valueFieldName, displayValueFieldName);
+                }
                     break;
                 case "sqlFlagList":
-                    query = root.GetAttributeValue<string>("query");
-                    valueFieldName = root.GetAttributeValue<string>("valueFieldName");
-                    displayValueFieldName = root.GetAttributeValue<string>("displayValueFieldName");
+                {
+                    string query = root.GetAttributeValue<string>("query");
+                    string valueFieldName = root.GetAttributeValue<string>("valueFieldName");
+                    string displayValueFieldName = root.GetAttributeValue<string>("displayValueFieldName");
                     optionBehaviour = new SqlFlagListOptionBehaviour(optionValue, query, valueFieldName, displayValueFieldName);
+                }
                     break;
                 case "sqlMultiList":
-                    query = root.GetAttributeValue<string>("query");
-                    sorted = root.GetAttributeValue<bool>("sorted");
-                    separator = root.GetAttributeValue<string>("separator");
-                    valueFieldName = root.GetAttributeValue<string>("valueFieldName");
-                    displayValueFieldName = root.GetAttributeValue<string>("displayValueFieldName");
+                {
+                    string query = root.GetAttributeValue<string>("query");
+                    bool sorted = root.GetAttributeValue<bool>("sorted");
+                    string separator = root.GetAttributeValue<string>("separator");
+                    string valueFieldName = root.GetAttributeValue<string>("valueFieldName");
+                    string displayValueFieldName = root.GetAttributeValue<string>("displayValueFieldName");
                     optionBehaviour = new SqlMultiListOptionBehaviour(optionValue, query, sorted, separator, valueFieldName, displayValueFieldName);
+                }
                     break;
             }
 
@@ -143,9 +150,9 @@ namespace SetMeta.Impl
             {
                 if (element.Name.LocalName == "listItem")
                 {
-                    var value = element.GetAttributeValue<string>("value");
-                    var displayValue = element.GetAttributeValue<string>("displayValue");
-                    list.Add(new ListItem{Value = value, DisplayValue = displayValue});
+                    var value = optionValue.GetValue(element.GetAttributeValue<string>("value"));
+                    string displayValue = element.GetAttributeValue<string>("displayValue");
+                    list.Add(new ListItem(value, displayValue));
                 }
             }
 

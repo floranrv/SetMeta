@@ -13,7 +13,6 @@ namespace SetMeta.Behaviours
             ListItems = new List<ListItem>(validItems);
         }
 
-        public List<ListItem> ListItems { get; private set; }
-
+        public List<ListItem> ListItems { get; }
     }
 }

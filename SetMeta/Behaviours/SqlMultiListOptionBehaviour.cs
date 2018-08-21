@@ -16,10 +16,10 @@ namespace SetMeta.Behaviours
             DisplayMember = displayMember;
         }
 
-        public bool Sorted { get; private set; }
-        public string Separator { get; private set; }
-        public string Query { get; private set; }
-        public string ValueMember { get; private set; }
-        public string DisplayMember { get; private set; }
+        public bool Sorted { get; }
+        public string Separator { get; }
+        public string Query { get; }
+        public string ValueMember { get; }
+        public string DisplayMember { get; }
     }
 }

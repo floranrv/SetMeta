@@ -33,9 +33,9 @@ namespace SetMeta.Behaviours
             }
         }
 
-        public string MinValue { get; private set; }
-        public bool IsMinValueExists { get; private set; }
-        public string MaxValue { get; private set; }
-        public bool IsMaxValueExists { get; private set; }
+        public string MinValue { get; }
+        public bool IsMinValueExists { get; }
+        public string MaxValue { get; }
+        public bool IsMaxValueExists { get; }
     }
 }

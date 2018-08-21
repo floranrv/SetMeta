@@ -1,5 +1,4 @@
 ﻿using SetMeta.Abstract;
-using SetMeta.Impl;
 
 namespace SetMeta.Behaviours
 {
