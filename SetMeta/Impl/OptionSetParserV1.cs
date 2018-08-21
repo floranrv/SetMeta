@@ -77,6 +77,9 @@ namespace SetMeta.Impl
             optionBehaviour = null;
             string max = null;
             string min = null;
+            string query = null;
+            string valueFieldName = null;
+            string displayValueFieldName = null;
 
             switch (name)
             {
@@ -105,10 +108,16 @@ namespace SetMeta.Impl
                     optionBehaviour = CreateMultiListBehaviour(root, optionValue, sorted, separator);
                     break;
                 case "sqlFixedList":
-                    var query = root.GetAttributeValue<string>("query");
-                    var valueFieldName = root.GetAttributeValue<string>("valueFieldName");
-                    var displayValueFieldName = root.GetAttributeValue<string>("displayValueFieldName");
+                    query = root.GetAttributeValue<string>("query");
+                    valueFieldName = root.GetAttributeValue<string>("valueFieldName");
+                    displayValueFieldName = root.GetAttributeValue<string>("displayValueFieldName");
                     optionBehaviour = new SqlFixedListOptionBehaviour(optionValue, query,valueFieldName, displayValueFieldName);
+                    break;
+                case "sqlFlagList":
+                    query = root.GetAttributeValue<string>("query");
+                    valueFieldName = root.GetAttributeValue<string>("valueFieldName");
+                    displayValueFieldName = root.GetAttributeValue<string>("displayValueFieldName");
+                    optionBehaviour = new SqlFlagListOptionBehaviour(optionValue, query, valueFieldName, displayValueFieldName);
                     break;
             }
 
